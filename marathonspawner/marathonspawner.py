@@ -412,21 +412,18 @@ class MarathonSpawner(Spawner):
         app_info = yield self.get_app_info(self.app_id)
 
         if app_info is None:
-            return 0
-
-        if len(app_info.deployments) == 0:
-            return 0
+            self.log.error("Application %s is lost", self.app_id)
+            return 3
 
         for deployment in app_info.deployments:
             for current_action in deployment.current_actions:
                 if current_action.action == 'StopApplication':
                     self.log.error("Application %s is shutting down", self.app_id)
                     return 1
-            self.log.error("No healthy instance for application %s", self.app_id)
-            return 2
 
         if app_info.tasks_healthy == 0:
-            return 0
+            self.log.error("No healthy instance for application %s", self.app_id)
+            return 2
 
         if self.autotimeout is not None:
             tm_diff = datetime.utcnow() - self.user.last_activity
