@@ -252,7 +252,8 @@ class MarathonSpawner(Spawner):
     def options_from_form(self, formdata):
         options = {}
         options['app_image'] = formdata['app_image'][0] or None
-        options['force_pull_image'] = formdata['force_pull_image'][0] == 'on'
+        if 'force_pull_image' in formdata:
+            options['force_pull_image'] = formdata['force_pull_image'][0] == 'on'
         options['cpu'] = float(formdata['cpu'][0])
         options['mem'] = float(formdata['mem'][0])
         options['disk'] = float(formdata['disk'][0])
