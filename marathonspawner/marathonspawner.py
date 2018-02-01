@@ -271,7 +271,7 @@ class MarathonSpawner(Spawner):
         template = """
         <div>
             <label for="app_image">Image</label>
-            <input id="app_image" name="app_image" type="text" value="%(app_image)s" />
+            <input id="app_image" name="app_image" type="text" placeholder="%(app_image)s" />
         </div>
         <div class="row">
             <div class="col-sm-4">
