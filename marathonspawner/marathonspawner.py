@@ -35,8 +35,6 @@ class MarathonSpawner(Spawner):
 
     app_image = Unicode("jupyterhub/singleuser:%s" % _jupyterhub_xy, config=True)
 
-    force_pull_image = Bool(False, config=True)
-
     app_prefix = Unicode(
         "jupyter",
         help=dedent(
@@ -254,6 +252,7 @@ class MarathonSpawner(Spawner):
     def options_from_form(self, formdata):
         options = {}
         options['app_image'] = formdata['app_image'][0] or None
+        options['force_pull_image'] = formdata['force_pull_image'][0] == 'on'
         options['cpu'] = float(formdata['cpu'][0])
         options['mem'] = float(formdata['mem'][0])
         options['disk'] = float(formdata['disk'][0])
@@ -267,6 +266,12 @@ class MarathonSpawner(Spawner):
         <div class="form-group">
             <label for="app_image">Image <span class="label label-default">Optional</span></label>
             <input id="app_image" class="form-control" name="app_image" type="text" placeholder="e.g. %(app_image)s" />
+        </div>
+        <div class="checkbox">
+            <label for="force_pull_image">
+                <input id="force_pull_image" name="force_pull_image" type="checkbox" value="on" />
+                Force pull image
+            </label>
         </div>
         <div class="form-group">
             <div class="row">
@@ -316,9 +321,10 @@ class MarathonSpawner(Spawner):
     @gen.coroutine
     def start(self):
         app_image = self.user_options.get('app_image', None) or self.app_image
+        force_pull_image = self.user_options.get('force_pull_image', False)
         self.log.info("starting a Marathon app with (container_type=%s, image=%s)" % (self.container_type, app_image))
 
-        container_params = { 'image': app_image, 'force_pull_image': self.force_pull_image }
+        container_params = { 'image': app_image, 'force_pull_image': force_pull_image }
         docker_container = MarathonDockerContainer(**container_params)
 
         app_container = MarathonContainer(
