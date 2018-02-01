@@ -264,22 +264,24 @@ class MarathonSpawner(Spawner):
     @property
     def options_form(self):
         template = """
-        <div>
+        <div class="form-group">
             <label for="app_image">Image <span class="label label-default">Optional</span></label>
-            <input id="app_image" name="app_image" type="text" placeholder="e.g. %(app_image)s" />
+            <input id="app_image" class="form-control" name="app_image" type="text" placeholder="e.g. %(app_image)s" />
         </div>
-        <div class="row">
-            <div class="col-sm-4">
-                <label for="cpu">CPU</label>
-                <input id="cpu" name="cpu" type="number" step="any" value="%(cpu)s" min="%(min_cpu)s" max="%(max_cpu)s" required />
-            </div>
-            <div class="col-sm-4">
-                <label for="mem">Mem (MiB)</label>
-                <input id="mem" name="mem" type="number" step="any" value="%(mem)s" min="%(min_mem)s" max="$(max_mem)s" required />
-            </div>
-            <div class="col-sm-4">
-                <label for="disk">Disk (MiB)</label>
-                <input id="disk" name="disk" type="number" step="any" value="%(disk)s" min="%(min_disk)s" max="%(max_disk)s" required />
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-4">
+                    <label for="cpu">CPU</label>
+                    <input id="cpu" class="form-control" name="cpu" type="number" step="any" value="%(cpu)s" min="%(min_cpu)s" max="%(max_cpu)s" required />
+                </div>
+                <div class="col-sm-4">
+                    <label for="mem">Mem (MiB)</label>
+                    <input id="mem" class="form-control" name="mem" type="number" step="any" value="%(mem)s" min="%(min_mem)s" max="$(max_mem)s" required />
+                </div>
+                <div class="col-sm-4">
+                    <label for="disk">Disk (MiB)</label>
+                    <input id="disk" class="form-control" name="disk" type="number" step="any" value="%(disk)s" min="%(min_disk)s" max="%(max_disk)s" required />
+                </div>
             </div>
         </div>
         """ % {
@@ -296,10 +298,12 @@ class MarathonSpawner(Spawner):
         }
         if self.container_type == 'MESOS' and self.max_gpu > 0:
             template += """
-            <div class="row">
-                <div class="col-sm-4">
-                    <label for="gpu">GPU</label>
-                    <input id="gpu" name="gpu" type="number" step="1" value="%(gpu)s" min="%(min_gpu)s" max="%(max_gpu)s" required />
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label for="gpu">GPU</label>
+                        <input id="gpu" class="form-control" name="gpu" type="number" step="1" value="%(gpu)s" min="%(min_gpu)s" max="%(max_gpu)s" required />
+                    </div>
                 </div>
             </div>
             """ % {
