@@ -265,8 +265,8 @@ class MarathonSpawner(Spawner):
     def options_form(self):
         template = """
         <div>
-            <label for="app_image">Image</label>
-            <input id="app_image" name="app_image" type="text" placeholder="%(app_image)s" />
+            <label for="app_image">Image <span class="label label-default">Optional</span></label>
+            <input id="app_image" name="app_image" type="text" placeholder="e.g. %(app_image)s" />
         </div>
         <div class="row">
             <div class="col-sm-4">
