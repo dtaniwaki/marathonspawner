@@ -257,11 +257,6 @@ class MarathonSpawner(Spawner):
         options['cpu'] = float(formdata['cpu'][0])
         options['mem'] = float(formdata['mem'][0])
         options['disk'] = float(formdata['disk'][0])
-        envs = {}
-        for line in filter(None, formdata['envs'][0].split("\n")):
-            key, _, val = line.partition("=")
-            envs[key] = val
-        options['envs'] = envs
         if formdata.get('gpu', None):
             options['gpu'] = int(formdata['gpu'][0])
         return options
@@ -312,12 +307,6 @@ class MarathonSpawner(Spawner):
                 'max_gpu': self.max_gpu,
                 'gpu': self.stored_user_options.get('gpu', self.gpu),
             }
-        template += """
-        <div>
-            <label for="envs">Environment Variables</label>
-            <textarea id="envs" name="envs" placeholder="ENV1=VALUE&#x0a;ENV2=VALUE&#x0a;..."></textarea>
-        </div>
-        """
         return """<div>%s</div>""" % template
 
     @gen.coroutine
@@ -341,7 +330,6 @@ class MarathonSpawner(Spawner):
 
         cmd = self.cmd + self.get_args()
         env = self.get_env()
-        env.update(self.user_options.get('envs', {}))
 
         port_definitions = [PortDefinition(
             port=0,
