@@ -266,7 +266,7 @@ class MarathonSpawner(Spawner):
         template = """
         <div class="form-group">
             <label for="app_image">Image <span class="label label-default">Optional</span></label>
-            <input id="app_image" class="form-control" name="app_image" type="text" placeholder="e.g. %(app_image)s" />
+            <input id="app_image" class="form-control" name="app_image" type="text" placeholder="e.g. %(default_app_image)s" value="%(app_image)s" />
         </div>
         <div class="checkbox">
             <label for="force_pull_image">
@@ -291,7 +291,8 @@ class MarathonSpawner(Spawner):
             </div>
         </div>
         """ % {
-            'app_image': self.stored_user_options.get('app_image', None) or self.app_image,
+            'default_app_image': self.app_image,
+            'app_image': self.stored_user_options.get('app_image', None) or '',
             'min_cpu': 0.001,
             'max_cpu': self.max_cpu,
             'cpu': remove_zeros(str(self.stored_user_options.get('cpu', self.cpu))),
