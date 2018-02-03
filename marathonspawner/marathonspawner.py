@@ -89,11 +89,6 @@ class MarathonSpawner(Spawner):
     max_gpu = Integer(0, config=True)
     gpu = Integer(0, config=True)
 
-    container_type = Unicode(
-        'DOCKER',
-        help="Enum of DOCKER or MESOS"
-        ).tag(config=True)
-
     mesos_user = Unicode(None, config=True, allow_none=True)
 
     autotimeout = Integer(None,
@@ -303,7 +298,7 @@ class MarathonSpawner(Spawner):
             'max_disk': self.max_disk,
             'disk': remove_zeros(str(self.stored_user_options.get('disk', self.disk))),
         }
-        if self.container_type == 'MESOS' and self.max_gpu > 0:
+        if self.max_gpu > 0:
             template += """
             <div class="form-group">
                 <div class="row">
@@ -324,14 +319,14 @@ class MarathonSpawner(Spawner):
     def start(self):
         app_image = self.user_options.get('app_image', None) or self.app_image
         force_pull_image = self.user_options.get('force_pull_image', False)
-        self.log.info("starting a Marathon app with (container_type=%s, image=%s)" % (self.container_type, app_image))
+        self.log.info("starting a Marathon app with image=%s" % app_image)
 
         container_params = { 'image': app_image, 'force_pull_image': force_pull_image }
         docker_container = MarathonDockerContainer(**container_params)
 
         app_container = MarathonContainer(
             docker=docker_container,
-            type=self.container_type,
+            type='MESOS',
             volumes=self.get_volumes())
 
         cpu = self.user_options.get('cpu', None)
