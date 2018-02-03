@@ -8,6 +8,8 @@ c.JupyterHub.authenticator_class = 'dummyauthenticator.DummyAuthenticator'
 
 c.JupyterHub.spawner_class = 'marathonspawner.MarathonSpawner'
 
+c.Spawner.start_timeout = 3600
+
 c.MarathonSpawner.app_image = os.environ['NOTEBOOK_IMAGE']
 c.MarathonSpawner.app_prefix = 'jupyter'
 c.MarathonSpawner.marathon_host = os.environ.get('MARATHON_HOST', None)
