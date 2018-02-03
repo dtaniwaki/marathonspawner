@@ -45,7 +45,7 @@ services:
   hub:
     build:
       context: '.'
-    command: jupyterhub --ip 0.0.0.0 --port 8000 --debug
+    command: bash /opt/wait.sh jupyterhub --ip 0.0.0.0 --port 8000 --debug
     user: jupyterhub # The UID is the same as anonymous user in mesos-slave
     environment:
       - JUPYTERHUB_API_IP=hub
@@ -61,6 +61,8 @@ services:
     expose:
       - 8000
       - 8081
+    volumes:
+      - ./wait.sh:/opt/wait.sh
     depends_on:
       - marathon
 networks:
