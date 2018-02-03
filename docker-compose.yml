@@ -8,7 +8,7 @@ services:
       - 2181:2181
   mesos-master:
     image: dtaniwaki/mesos-master:1.4.0-2.0.1
-    command: mesos-master --registry=in_memory --port=5050 --zk=zk://zk:2181/mesos --log_dir=/var/log/mesos
+    command: mesos-master --registry=in_memory --port=5050 --zk=zk://zk:2181/mesos --log_dir=/var/log/mesos --logging_level=WARNING
     networks:
       - marathonspawner
     ports:
@@ -19,7 +19,7 @@ services:
       - zk
   mesos-slave:
     image: dtaniwaki/mesos-slave:1.4.0-2.0.1
-    command: mesos-slave --port=5051 --master=zk://zk:2181/mesos --work_dir=/sandbox --log_dir=/var/log/mesos --hostname=localhost --isolation=filesystem/linux,docker/runtime --image_providers=docker
+    command: mesos-slave --port=5051 --master=zk://zk:2181/mesos --work_dir=/var/lib/mesos --log_dir=/var/log/mesos --hostname=mesos-slave --isolation=filesystem/linux,docker/runtime --image_providers=docker --logging_level=WARNING --docker_store_dir=/docker-store --image_provisioner_backend=copy --resources='ports:[10000-11000]'
     privileged: true
     networks:
       - marathonspawner
@@ -29,22 +29,22 @@ services:
       - 5051:5051
     expose:
       - 5051
+      - "10000-11000"
     volumes:
-      - ./tmp/sandbox:/sandbox
-      - ./tmp/data:/data
+      - mesos-docker-store:/docker-store
     depends_on:
       - mesos-master
   marathon:
     image: dtaniwaki/marathon:1.5.1
-    command: --master zk://zk:2181/mesos --zk zk://zk:2181/marathon
+    command: --master zk://zk:2181/mesos --zk zk://zk:2181/marathon --logging_level=WARN
     networks:
       - marathonspawner
-    depends_on:
-      - mesos-master
     ports:
       - 8080:8080
     expose:
       - 8080
+    depends_on:
+      - mesos-master
   hub:
     build:
       context: '.'
@@ -68,3 +68,5 @@ services:
       - marathon
 networks:
   marathonspawner:
+volumes:
+  mesos-docker-store:
