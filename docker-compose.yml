@@ -23,8 +23,6 @@ services:
     privileged: true
     networks:
       - marathonspawner
-    depends_on:
-      - mesos-master
     ports:
       - 5051:5051
     expose:
